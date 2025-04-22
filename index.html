@@ -1,54 +1,171 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>love nii</title>
+    <link rel="shortcut icon" href="icon.png">
     <style>
         body {
-            background-image: url('/bgwhite.gif');
-            height: 100vh;
+            background: black url('bgwhite.gif') repeat;
+            color: rgb(255, 255, 255);
+            font-family: "Courier New", monospace;
+            font-size: 14px;
+            text-align: center;
             margin: 0;
+            padding: 0;
             overflow: hidden;
-            position: relative;
         }
 
-        .random-img {
+        .lovenii {
             position: absolute;
-            width: auto;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .gif {
+            position: absolute;
+            width: 120px;
             height: auto;
-            max-width: 100px;
+            opacity: 0.85;
+            mix-blend-mode: lighten;
+        }
+
+        .text-container {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .text-frag {
+            font-size: 18px;
+            color: #ffffff;
+            mix-blend-mode: difference;
+            margin: 10px;
+            z-index: 1000;
+            position: absolute;
+        }
+
+        .static {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('static.gif') repeat;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.1;
         }
     </style>
 </head>
-
 <body>
-    <img src="/kb.gif" id="img1" class="random-img" alt="kb">
-    <img src="/bodies.gif" id="img2" class="random-img" alt="bodies">
+    <audio autoplay loop>
+        <source src="ambience.wav" type="audio/wav">
+    </audio>
+
+    <div class="lovenii">lovenii</div>
+
+    <img src="kb.gif" id="kb" class="gif">
+    <img src="bodies.gif" id="bodies" class="gif">
+    <img src="lainsticker.gif" id="lainsticker" class="gif">
+    <img src="lainweep.gif" id="lainweep" class="gif">
+    <img src="lainwalk.gif" id="lainwalk" class="gif">
+    <img src="laincreep.gif" id="laincreep" class="gif">
+
+    <div class="static"></div>
+
+    <div class="text-container">
+        <div class="text-frag" id="text1">make me sad, make me mad, make me feel alright?</div>
+    </div>
 
     <script>
-        function randomPosition(img) {
-            const bodyWidth = window.innerWidth;
-            const bodyHeight = window.innerHeight;
+        function spawnRandom(id, isText = false) {
+            let el = document.getElementById(id);
+            let x = Math.random() * (window.innerWidth - el.offsetWidth);
+            let y = Math.random() * (window.innerHeight - el.offsetHeight);
+            
+            if (isText) {
+                let container = document.querySelector('.text-container');
+                let containerWidth = container.offsetWidth;
+                let containerHeight = container.offsetHeight;
+                x = Math.random() * (containerWidth - el.offsetWidth);
+                y = Math.random() * (containerHeight - el.offsetHeight);
+            }
 
-            const maxX = bodyWidth - img.offsetWidth;
-            const maxY = bodyHeight - img.offsetHeight;
-
-            const randX = Math.floor(Math.random() * maxX);
-            const randY = Math.floor(Math.random() * maxY);
-
-            img.style.left = `${randX}px`;
-            img.style.top = `${randY}px`;
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
         }
 
-        window.onload = () => {
-            const img1 = document.getElementById('img1');
-            const img2 = document.getElementById('img2');
+        let gifs = document.querySelectorAll('.gif');
+        let speeds = [];
 
-            randomPosition(img1);
-            randomPosition(img2);
+        gifs.forEach((gif) => {
+            speeds.push({
+                xSpeed: (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1),
+                ySpeed: (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1)
+            });
+        });
+
+        function moveGifs() {
+            gifs.forEach((gif, index) => {
+                let gifRect = gif.getBoundingClientRect();
+                let x = gif.offsetLeft + speeds[index].xSpeed;
+                let y = gif.offsetTop + speeds[index].ySpeed;
+
+                if (x + gifRect.width >= window.innerWidth || x <= 0) {
+                    speeds[index].xSpeed = -speeds[index].xSpeed;
+                }
+
+                if (y + gifRect.height >= window.innerHeight || y <= 0) {
+                    speeds[index].ySpeed = -speeds[index].ySpeed;
+                }
+
+                gifs.forEach((otherGif, otherIndex) => {
+                    if (index !== otherIndex) {
+                        let otherRect = otherGif.getBoundingClientRect();
+                        if (isCollision(gifRect, otherRect)) {
+                            speeds[index].xSpeed = -speeds[index].xSpeed;
+                            speeds[index].ySpeed = -speeds[index].ySpeed;
+                            speeds[otherIndex].xSpeed = -speeds[otherIndex].xSpeed;
+                            speeds[otherIndex].ySpeed = -speeds[otherIndex].ySpeed;
+                        }
+                    }
+                });
+
+                gif.style.left = x + 'px';
+                gif.style.top = y + 'px';
+            });
+        }
+
+        function isCollision(rect1, rect2) {
+            return !(rect1.right < rect2.left || 
+                     rect1.left > rect2.right || 
+                     rect1.bottom < rect2.top || 
+                     rect1.top > rect2.bottom);
+        }
+
+        window.onload = function() {
+            spawnRandom('text1', true);
+            
+            spawnRandom('kb');
+            spawnRandom('bodies');
+            spawnRandom('lainsticker');
+            spawnRandom('lainweep');
+            spawnRandom('lainwalk');
+            spawnRandom('laincreep');
+            
+            setInterval(moveGifs, 10);
         };
     </script>
 </body>
-
 </html>
