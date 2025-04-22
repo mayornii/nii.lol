@@ -10,11 +10,45 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            position: relative;
+        }
+
+        .random-img {
+            position: absolute;
+            width: auto;
+            height: auto;
+            max-width: 100px;
         }
     </style>
 </head>
 
 <body>
+    <img src="/kb.gif" id="img1" class="random-img" alt="kb">
+    <img src="/bodies.gif" id="img2" class="random-img" alt="bodies">
+
+    <script>
+        function randomPosition(img) {
+            const bodyWidth = window.innerWidth;
+            const bodyHeight = window.innerHeight;
+
+            const maxX = bodyWidth - img.offsetWidth;
+            const maxY = bodyHeight - img.offsetHeight;
+
+            const randX = Math.floor(Math.random() * maxX);
+            const randY = Math.floor(Math.random() * maxY);
+
+            img.style.left = `${randX}px`;
+            img.style.top = `${randY}px`;
+        }
+
+        window.onload = () => {
+            const img1 = document.getElementById('img1');
+            const img2 = document.getElementById('img2');
+
+            randomPosition(img1);
+            randomPosition(img2);
+        };
+    </script>
 </body>
 
 </html>
