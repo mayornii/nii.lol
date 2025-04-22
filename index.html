@@ -3,89 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>love nii</title>
-    <link rel="shortcut icon" href="/icon.png">
     <style>
         body {
             background-image: url('/bgwhite.gif');
-            display: flex;
-            justify-content: center;
-            align-items: center;
             height: 100vh;
             margin: 0;
             overflow: hidden;
-            flex-direction: column;
-        }
-
-        .haii {
-            color: white;
-            font-size: 17px; 
-            z-index: 10;
-            margin-bottom: 10px;
-            position: relative;
-        }
-
-        .slider-container {
-            position: relative;
-            width: 100%;
-            height: 2px;
-            background-color: white;
-            margin-top: 10px;
-        }
-
-        .volume-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 100%;
-            height: 2px;
-            background: white;
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0.7;
-            outline: none;
-            cursor: pointer;
-        }
-
-        .volume-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 0; 
-            height: 0; 
-            background: transparent; 
-            cursor: pointer;
-        }
-
-        .volume-slider::-moz-range-thumb {
-            width: 0;
-            height: 0;
-            background: transparent; 
-            cursor: pointer;
         }
     </style>
 </head>
 
 <body>
-    <audio id="background-audio" autoplay loop>
-        <source src="POWERLINE.mp4" type="audio/mp4">
-    </audio>
-
-    <div class="haii">
-        ｍａｋｅ ｍｅ ｓａｄ，        ｍａｋｅ ｍｅ ｍａｄ，        ｍａｋｅ ｍｅ ｆｅｅｌ     ａｌｒｉｇｈｔ？
-        <div class="slider-container">
-            <input type="range" min="0" max="1" step="0.01" value="0.7" class="volume-slider" id="volumeSlider">
-        </div>
-    </div>
-
-    <script>
-        const audio = document.getElementById('background-audio');
-        const volumeSlider = document.getElementById('volumeSlider');
-
-        volumeSlider.addEventListener('input', function () {
-            audio.volume = this.value;
-        });
-    </script>
 </body>
 
 </html>
