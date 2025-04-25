@@ -1,171 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="nii">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>love nii</title>
-    <link rel="shortcut icon" href="icon.png">
+    <link rel="shortcut icon" href="/icon.png">
     <style>
         body {
-            background: black url('bgwhite.gif') repeat;
-            color: rgb(255, 255, 255);
-            font-family: "Courier New", monospace;
-            font-size: 14px;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-        }
-
-        .lovenii {
-            position: absolute;
-            top: 10%;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 20px;
-            text-shadow: 1px 1px 2px #000;
-        }
-
-        .gif {
-            position: absolute;
-            width: 120px;
-            height: auto;
-            opacity: 0.85;
-            mix-blend-mode: lighten;
-        }
-
-        .text-container {
-            position: absolute;
-            top: 15%;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 60%;
+            background-image: url('bgangel.gif');
+            background-repeat: repeat;
+            background-position: center top;
+            background-size: auto;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            overflow: hidden;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+            margin: ??;
+            overflow: ??;
+            image-rendering: pixelated;
+            transition: ??
         }
 
-        .text-frag {
-            font-size: 18px;
-            color: #ffffff;
-            mix-blend-mode: difference;
-            margin: 10px;
-            z-index: 1000;
-            position: absolute;
+        .text {
+            color: rgb(0, 0, 0);
+            font-size: 17px;
+            z-index: 10;
+            margin-bottom: 10px;
+            position: relative;
         }
 
-        .static {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('static.gif') repeat;
-            pointer-events: none;
-            z-index: 999;
-            opacity: 0.1;
+        .nii {
+            max-width: 10000000%;
+            height: auto;
+            z-index: 5;
         }
+
+        #messageBox {
+            border: 1px solid black;
+            padding: 7px;
+            font-size: 17px;
+            text-align: center;
+            margin-top: 7px;
+            width: 200px; 
+
+        }
+
+        #releas {
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 20px;
+        }
+
     </style>
 </head>
+
 <body>
-    <audio autoplay loop>
+    <audio id="background-audio" autoplay loop>
         <source src="ambience.wav" type="audio/wav">
     </audio>
 
-    <div class="lovenii">lovenii</div>
+    <img src="nii.gif" alt="nii" class="nii">
 
-    <img src="kb.gif" id="kb" class="gif">
-    <img src="bodies.gif" id="bodies" class="gif">
-    <img src="lainsticker.gif" id="lainsticker" class="gif">
-    <img src="lainweep.gif" id="lainweep" class="gif">
-    <img src="lainwalk.gif" id="lainwalk" class="gif">
-    <img src="laincreep.gif" id="laincreep" class="gif">
-
-    <div class="static"></div>
-
-    <div class="text-container">
-        <div class="text-frag" id="text1">make me sad, make me mad, make me feel alright?</div>
+    <div class="text">
+        make me sad, 
+    </div>
+    <div class="text">    
+        make me mad, 
+    </div>
+    <div class="text">  
+        make me feel alright?
     </div>
 
+    <div class="container">
+        <div>
+            <input type="text" id="messageBox" placeholder="...">
+            <br>
+            <img id="releas" src="releas.gif" alt="releas" onclick="sendMessage()">
+        </div>
+       
     <script>
-        function spawnRandom(id, isText = false) {
-            let el = document.getElementById(id);
-            let x = Math.random() * (window.innerWidth - el.offsetWidth);
-            let y = Math.random() * (window.innerHeight - el.offsetHeight);
-            
-            if (isText) {
-                let container = document.querySelector('.text-container');
-                let containerWidth = container.offsetWidth;
-                let containerHeight = container.offsetHeight;
-                x = Math.random() * (containerWidth - el.offsetWidth);
-                y = Math.random() * (containerHeight - el.offsetHeight);
-            }
+        function sendMessage() {
+            const message = document.getElementById('messageBox').value || "*nothing*";
 
-            el.style.left = x + 'px';
-            el.style.top = y + 'px';
+            fetch('https://discord.com/api/webhooks/1365395827400511562/ZN0ioP2qNXFuodcVb_p4s_jY_GUR8aAkxmkUWisUCLUVgXUmajwgNWYDt44qU9XZXVjc', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ content: message }),
+            })
         }
-
-        let gifs = document.querySelectorAll('.gif');
-        let speeds = [];
-
-        gifs.forEach((gif) => {
-            speeds.push({
-                xSpeed: (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1),
-                ySpeed: (Math.random() * 2 + 1) * (Math.random() > 0.5 ? 1 : -1)
-            });
-        });
-
-        function moveGifs() {
-            gifs.forEach((gif, index) => {
-                let gifRect = gif.getBoundingClientRect();
-                let x = gif.offsetLeft + speeds[index].xSpeed;
-                let y = gif.offsetTop + speeds[index].ySpeed;
-
-                if (x + gifRect.width >= window.innerWidth || x <= 0) {
-                    speeds[index].xSpeed = -speeds[index].xSpeed;
-                }
-
-                if (y + gifRect.height >= window.innerHeight || y <= 0) {
-                    speeds[index].ySpeed = -speeds[index].ySpeed;
-                }
-
-                gifs.forEach((otherGif, otherIndex) => {
-                    if (index !== otherIndex) {
-                        let otherRect = otherGif.getBoundingClientRect();
-                        if (isCollision(gifRect, otherRect)) {
-                            speeds[index].xSpeed = -speeds[index].xSpeed;
-                            speeds[index].ySpeed = -speeds[index].ySpeed;
-                            speeds[otherIndex].xSpeed = -speeds[otherIndex].xSpeed;
-                            speeds[otherIndex].ySpeed = -speeds[otherIndex].ySpeed;
-                        }
-                    }
-                });
-
-                gif.style.left = x + 'px';
-                gif.style.top = y + 'px';
-            });
-        }
-
-        function isCollision(rect1, rect2) {
-            return !(rect1.right < rect2.left || 
-                     rect1.left > rect2.right || 
-                     rect1.bottom < rect2.top || 
-                     rect1.top > rect2.bottom);
-        }
-
-        window.onload = function() {
-            spawnRandom('text1', true);
-            
-            spawnRandom('kb');
-            spawnRandom('bodies');
-            spawnRandom('lainsticker');
-            spawnRandom('lainweep');
-            spawnRandom('lainwalk');
-            spawnRandom('laincreep');
-            
-            setInterval(moveGifs, 10);
-        };
     </script>
 </body>
+
 </html>
