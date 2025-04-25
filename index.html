@@ -21,7 +21,7 @@
             margin: ??;
             overflow: ??;
             image-rendering: pixelated;
-            transition: ??
+            transition: godhood, probably;
         }
 
         .text {
@@ -33,7 +33,7 @@
         }
 
         .nii {
-            max-width: 10000000%;
+            max-width: 100%;
             height: auto;
             z-index: 5;
         }
@@ -44,8 +44,7 @@
             font-size: 17px;
             text-align: center;
             margin-top: 7px;
-            width: 200px; 
-
+            width: 200px;
         }
 
         #releas {
@@ -81,25 +80,6 @@
         make me feel alright?
     </div>
 
-    <div class="container">
-        <div>
-            <input type="text" id="messageBox" placeholder="...">
-            <br>
-            <img id="releas" src="releas.gif" alt="releas" onclick="sendMessage()">
-        </div>
-       
-    <script>
-        function sendMessage() {
-            const message = document.getElementById('messageBox').value || "*nothing*";
-
-            fetch('https://discord.com/api/webhooks/1365395827400511562/ZN0ioP2qNXFuodcVb_p4s_jY_GUR8aAkxmkUWisUCLUVgXUmajwgNWYDt44qU9XZXVjc', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ content: message }),
-            })
-        }
     </script>
 </body>
 
